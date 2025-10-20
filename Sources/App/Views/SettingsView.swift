@@ -8,11 +8,33 @@ struct SettingsView: View {
     @AppStorage("minMessagesForImportance") private var minMessagesForImportance = 10
     
     @State private var showingSaveConfirmation = false
+    @State private var showClaudeDesktopHelper = false
     
     let weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     
     var body: some View {
         Form {
+            Section("MCP Server") {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Image(systemName: "link.circle.fill")
+                            .foregroundColor(.blue)
+                        Text("Connect to AI Assistants")
+                            .font(.headline)
+                    }
+                    
+                    Text("ChatInsights provides an MCP server that allows AI assistants like Claude Desktop to access your messages, contacts, calendar, and more.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Button(action: { showClaudeDesktopHelper = true }) {
+                        Label("Configure Claude Desktop", systemImage: "terminal")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                }
+            }
+            
             Section("OpenAI Integration") {
                 SecureField("API Key", text: $openAIKey)
                     .textFieldStyle(.roundedBorder)
@@ -90,6 +112,9 @@ struct SettingsView: View {
             if weeklyNotificationsEnabled {
                 SchedulerService.shared.scheduleWeeklyAnalysis()
             }
+        }
+        .sheet(isPresented: $showClaudeDesktopHelper) {
+            ClaudeDesktopHelper()
         }
     }
 }

@@ -43,8 +43,10 @@ class MenuBarController {
 
 struct MenuBarPopoverView: View {
     @StateObject private var appState = AppState()
+    @StateObject private var serviceManager = MCPServiceManager.shared
     @State private var showDashboard = false
     @State private var showSettings = false
+    @State private var showMCPServices = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -65,10 +67,35 @@ struct MenuBarPopoverView: View {
                 
                 Spacer()
                 
+                // MCP Server toggle
+                Toggle(isOn: Binding(
+                    get: { serviceManager.isServerRunning },
+                    set: { enabled in
+                        if enabled {
+                            serviceManager.startServer()
+                        } else {
+                            serviceManager.stopServer()
+                        }
+                    }
+                )) {
+                    Text("MCP")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .toggleStyle(.switch)
+                .controlSize(.mini)
+                
+                Button(action: { showMCPServices = true }) {
+                    Image(systemName: "server.rack")
+                }
+                .buttonStyle(.plain)
+                .help("MCP Services")
+                
                 Button(action: { showSettings = true }) {
                     Image(systemName: "gear")
                 }
                 .buttonStyle(.plain)
+                .help("Settings")
             }
             .padding()
             .background(Color(nsColor: .controlBackgroundColor))
@@ -166,6 +193,9 @@ struct MenuBarPopoverView: View {
         }
         .sheet(isPresented: $showSettings) {
             SettingsView()
+        }
+        .sheet(isPresented: $showMCPServices) {
+            MCPServicesView()
         }
     }
     
