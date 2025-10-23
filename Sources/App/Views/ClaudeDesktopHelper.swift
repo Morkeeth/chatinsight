@@ -6,7 +6,7 @@ struct ClaudeDesktopHelper: View {
     @State private var showCopiedAlert = false
     @State private var configStatus: ConfigStatus = .unknown
     
-    enum ConfigStatus {
+    enum ConfigStatus: Equatable {
         case unknown
         case notInstalled
         case notConfigured

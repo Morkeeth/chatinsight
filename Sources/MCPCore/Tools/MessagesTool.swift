@@ -58,8 +58,8 @@ public class MessagesTool: MCPToolProtocol {
         let dbQueue = try DatabaseQueue(path: databasePath)
         
         // Fetch messages
-        let messages = try await dbQueue.read { db in
-            try fetchMessages(
+        let messages = try await dbQueue.read { [self] db in
+            try self.fetchMessages(
                 db: db,
                 participant: participant,
                 startDate: startDate,

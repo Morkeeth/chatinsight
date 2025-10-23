@@ -1,5 +1,4 @@
 import Foundation
-import ModelContextProtocol
 
 /// Main MCP Server implementation
 public actor MCPServer {
@@ -8,10 +7,9 @@ public actor MCPServer {
     
     public init(databasePath: String? = nil) {
         self.databasePath = databasePath
-        registerTools()
     }
     
-    private func registerTools() {
+    public func registerTools() {
         // Messages tool (requires database path)
         if let dbPath = databasePath {
             tools["fetchMessages"] = MessagesTool(databasePath: dbPath)

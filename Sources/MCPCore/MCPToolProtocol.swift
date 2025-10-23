@@ -1,5 +1,4 @@
 import Foundation
-import ModelContextProtocol
 
 /// Protocol for MCP tools
 public protocol MCPToolProtocol {

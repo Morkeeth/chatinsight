@@ -1,6 +1,7 @@
 import SwiftUI
 import Contacts
 import EventKit
+import MCPCore
 
 /// View for managing MCP service permissions
 struct MCPServicesView: View {

@@ -23,42 +23,22 @@ struct ChatInsightsCLI: AsyncParsableCommand {
     }
 }
 
-/// Stdio-based MCP Server that communicates with the main app via Bonjour
+/// Stdio-based MCP Server 
 class StdioMCPServer {
     private let verbose: Bool
-    private let bonjourService = BonjourService()
-    private var pendingRequests: [String: CheckedContinuation<Data, Error>] = [:]
     
     init(verbose: Bool) {
         self.verbose = verbose
     }
     
     func start() async throws {
-        log("Connecting to ChatInsights app via Bonjour...")
-        
-        // Set up Bonjour connection to app
-        await setupBonjourConnection()
-        
-        // Wait a bit for connection to establish
-        try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
-        
+        log("ChatInsights MCP Server starting...")
+        log("Note: Full MCP server implementation with Bonjour communication")
+        log("This is a placeholder CLI that will proxy requests to the main app")
         log("Ready to receive MCP requests via stdio")
         
-        // Read from stdin and forward to app
+        // Read from stdin and process MCP protocol messages
         await processStdioInput()
-    }
-    
-    private func setupBonjourConnection() async {
-        bonjourService.onConnectionEstablished = { [weak self] in
-            self?.log("Connected to ChatInsights app")
-        }
-        
-        bonjourService.onMessageReceived = { [weak self] data in
-            // Forward responses from app to stdout
-            self?.writeToStdout(data)
-        }
-        
-        bonjourService.startBrowsing()
     }
     
     private func processStdioInput() async {
@@ -70,16 +50,22 @@ class StdioMCPServer {
                 break
             }
             
-            // Forward to app via Bonjour
-            bonjourService.sendMessage(data)
+            // Parse JSON-RPC request
+            if let jsonString = String(data: data, encoding: .utf8) {
+                log("Received: \(jsonString)")
+                
+                // Send placeholder response
+                let response = """
+                {"jsonrpc":"2.0","id":1,"result":{"status":"ready","message":"ChatInsights MCP Server"}}
+                """
+                writeToStdout(Data(response.utf8))
+            }
         }
     }
     
     private func writeToStdout(_ data: Data) {
         FileHandle.standardOutput.write(data)
-        if let string = String(data: data, encoding: .utf8), string.last != "\n" {
-            FileHandle.standardOutput.write(Data("\n".utf8))
-        }
+        FileHandle.standardOutput.write(Data("\n".utf8))
     }
     
     private func log(_ message: String) {

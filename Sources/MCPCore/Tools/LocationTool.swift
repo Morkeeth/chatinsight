@@ -4,7 +4,9 @@ import CoreLocation
 /// Location tool - provides current location
 public class LocationTool: NSObject, MCPToolProtocol {
     public let name = "getCurrentLocation"
-    public let description = "Get the current location (latitude, longitude, and address)."
+    public override var description: String {
+        return "Get the current location (latitude, longitude, and address)."
+    }
     
     public var inputSchema: [String: Any] {
         return [
@@ -25,10 +27,14 @@ public class LocationTool: NSObject, MCPToolProtocol {
         // Request authorization
         let authStatus = locationManager.authorizationStatus
         if authStatus == .notDetermined {
+            #if os(macOS)
+            locationManager.startUpdatingLocation() // macOS doesn't have requestWhenInUseAuthorization
+            #else
             locationManager.requestWhenInUseAuthorization()
+            #endif
         }
         
-        guard authStatus == .authorizedAlways || authStatus == .authorizedWhenInUse else {
+        guard authStatus == .authorizedAlways || authStatus == .authorized else {
             throw MCPToolError.permissionDenied("Location access denied. Please grant access through System Settings.")
         }
         

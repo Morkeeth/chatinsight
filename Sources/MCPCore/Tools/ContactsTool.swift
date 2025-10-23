@@ -86,7 +86,8 @@ public class ContactsTool: MCPToolProtocol {
                 
                 // Check emails
                 for email in contact.emailAddresses {
-                    if email.value.lowercased().contains(query.lowercased()) {
+                    let emailString = email.value as String
+                    if emailString.lowercased().contains(query.lowercased()) {
                         contacts.append(contact)
                         if contacts.count >= limit {
                             stop.pointee = true
@@ -168,22 +169,38 @@ public class MeContactTool: MCPToolProtocol {
             throw MCPToolError.permissionDenied("Contacts access not authorized.")
         }
         
-        guard let meContact = try? contactStore.unifiedMeContactWithKeys(toFetch: [
+        // Get current user info from system
+        let userName = NSFullUserName()
+        
+        // Try to find user in contacts by searching for their name
+        let keysToFetch = [
             CNContactGivenNameKey as CNKeyDescriptor,
             CNContactFamilyNameKey as CNKeyDescriptor,
             CNContactEmailAddressesKey as CNKeyDescriptor,
             CNContactPhoneNumbersKey as CNKeyDescriptor
-        ]) else {
-            throw MCPToolError.executionFailed("Could not retrieve 'me' contact")
-        }
+        ]
         
-        let person = JSONLD.Person(
-            name: "\(meContact.givenName) \(meContact.familyName)",
-            givenName: meContact.givenName,
-            familyName: meContact.familyName,
-            email: meContact.emailAddresses.first?.value as String?,
-            telephone: meContact.phoneNumbers.first?.value.stringValue
-        )
+        var person: JSONLD.Person
+        
+        if !userName.isEmpty {
+            // Try to find contact by name
+            let predicate = CNContact.predicateForContacts(matchingName: userName)
+            if let contacts = try? contactStore.unifiedContacts(matching: predicate, keysToFetch: keysToFetch),
+               let meContact = contacts.first {
+                person = JSONLD.Person(
+                    name: "\(meContact.givenName) \(meContact.familyName)",
+                    givenName: meContact.givenName,
+                    familyName: meContact.familyName,
+                    email: meContact.emailAddresses.first?.value as String?,
+                    telephone: meContact.phoneNumbers.first?.value.stringValue
+                )
+            } else {
+                // Fallback to system user name
+                person = JSONLD.Person(name: userName)
+            }
+        } else {
+            person = JSONLD.Person(name: "Current User")
+        }
         
         return formatJSONLD(person.toJSONLD())
     }
