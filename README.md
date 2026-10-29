@@ -1,5 +1,22 @@
 # ChatInsights MCP Server
 
+## TLDR
+
+A native macOS application that exposes selected personal services through MCP.<br>
+For people connecting an assistant to Messages, Contacts, Calendar and other Mac services.<br>
+Review service permissions and the receiving assistant's data policy before connecting personal records.
+
+## The problem and approach
+
+- Problem: assistants cannot see your own messages or calendar, and pasting them in by hand is slow and leaks data.
+- What it does: a sandboxed menu bar app exposing six services as MCP tools, with per-service permissions, no telemetry and open source code.
+
+## Review and pick up the work
+
+[SETUP.md](SETUP.md) · [Agent guide](AGENTS.md)
+
+Start with the linked source, setup and evidence. Recorded demos and sample data keep their original scope; use the repository instructions for a fresh run.
+
 > **Connect your digital life to AI assistants**
 
 ChatInsights is a native macOS app that provides a Model Context Protocol (MCP) server, giving AI assistants like Claude Desktop secure access to your Messages, Contacts, Calendar, Reminders, Location, and Weather data.
@@ -409,3 +426,7 @@ ChatInsights is an independent open-source project that provides read-only acces
 🌟 Star this repo if you find it useful!  
 🐛 Found a bug? [Open an issue](https://github.com/Morkeeth/chatinsight/issues)  
 💡 Have an idea? [Start a discussion](https://github.com/Morkeeth/chatinsight/discussions)
+
+## License and data boundaries
+
+Code terms: [LICENSE](LICENSE). Data, provider responses, media, fonts and other third-party assets may have separate terms. Repository access alone does not grant rights to those materials. 
