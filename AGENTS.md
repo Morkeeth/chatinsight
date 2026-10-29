@@ -4,7 +4,7 @@ Read README.md first. This guide describes the repository source, not an authori
 
 ## Code map
 
-
+- `README.md`: the document and starting point for this repository.
 
 Configuration and declared commands: `Makefile`. Read them before installing dependencies.
 
