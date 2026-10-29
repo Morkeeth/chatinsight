@@ -1,5 +1,13 @@
 # ChatInsights MCP Server
 
+**ChatInsights is a native macOS app that runs an MCP server so an AI assistant can read your Messages, Contacts, Calendar, Reminders, location and weather, with the data staying on your Mac by default.**
+
+- Problem: assistants cannot see your own messages or calendar, and pasting them in by hand is slow and leaks data.
+- For: Mac users running Claude Desktop or another MCP client.
+- What it does: a sandboxed menu bar app exposing six services as MCP tools, with per-service permissions, no telemetry and open source code.
+- Try it: build with Xcode 15+ on macOS 14, then use the app's "Configure Claude Desktop" step. Early experiment, October 2025.
+
+
 > **Connect your digital life to AI assistants**
 
 ChatInsights is a native macOS app that provides a Model Context Protocol (MCP) server, giving AI assistants like Claude Desktop secure access to your Messages, Contacts, Calendar, Reminders, Location, and Weather data.
